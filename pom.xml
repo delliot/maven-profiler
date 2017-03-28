@@ -18,9 +18,9 @@
     </prerequisites>
 
     <scm>
-        <url>https://github.com/jcgay/maven-profiler.git</url>
-        <connection>scm:git:git://github.com/jcgay/maven-profiler.git</connection>
-        <developerConnection>scm:git:git@github.com:jcgay/maven-profiler.git</developerConnection>
+        <url>https://github.com/delliot/maven-profiler.git</url>
+        <connection>scm:git:git://github.com/delliot/maven-profiler.git</connection>
+        <developerConnection>scm:git:git@github.com:delliot/maven-profiler.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -92,6 +92,16 @@
             <version>2.4.8</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,58 +159,29 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>2.0.0</version>
-                <configuration>
-                    <projectsDirectory>src/it</projectsDirectory>
-                    <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-                    <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                    <cloneClean>true</cloneClean>
-                    <showVersion>true</showVersion>
-                    <postBuildHookScript>verify.groovy</postBuildHookScript>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>install</goal>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--&lt;!&ndash;<artifactId>maven-invoker-plugin</artifactId>&ndash;&gt;-->
+                <!--&lt;!&ndash;<version>2.0.0</version>&ndash;&gt;-->
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<projectsDirectory>src/it</projectsDirectory>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<cloneClean>true</cloneClean>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<showVersion>true</showVersion>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<postBuildHookScript>verify.groovy</postBuildHookScript>&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                <!--&lt;!&ndash;<executions>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<id>integration-test</id>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<goal>install</goal>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<goal>run</goal>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                <!--&lt;!&ndash;</executions>&ndash;&gt;-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>build-with-jdk-6</id>
-            <activation>
-                <jdk>[1.7,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-toolchains-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>toolchain</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <toolchains>
-                                <jdk>
-                                    <version>1.6</version>
-                                </jdk>
-                            </toolchains>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+
 
 </project>

@@ -66,13 +66,14 @@ public class Configuration {
     }
 
     private static Reporter chooseReporter() {
-        List<String> formats = asList(System.getProperty(PROFILE_FORMAT, "html").split(","));
+        List<String> formats = asList(System.getProperty(PROFILE_FORMAT, "json").split(","));
         return new CompositeReporter(transform(formats, reporters));
     }
 
     private static boolean isSortingActive() {
         String parameter = System.getProperty(DISABLE_TIME_SORTING);
-        return parameter == null || "false".equalsIgnoreCase(parameter);
+        //return parameter == null || "false".equalsIgnoreCase(parameter);
+        return false;
     }
 
     private static boolean isActive() {

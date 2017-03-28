@@ -22,6 +22,13 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.aether.RepositoryEvent;
 import org.eclipse.aether.artifact.Artifact;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -97,22 +104,72 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         }
     }
 
+    private String machineName() {
+        try {
+            InetAddress addr;
+            addr = InetAddress.getLocalHost();
+            String hostname = addr.getHostName();
+
+            return hostname;
+        } catch (UnknownHostException e) {
+            logger.error("could not get machine name", e);
+            return null;
+        }
+    }
+
+    private String developerName() {
+        return System.getProperty("user.name");
+    }
+
+
+    private String ipAddress() {
+        URL whatismyip = null;
+        try {
+            whatismyip = new URL("http://checkip.amazonaws.com");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                whatismyip.openStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String ip = null;
+        try {
+            ip = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ip;
+    }
+
     @Override
     public void close() throws Exception {
         super.close();
         if (configuration.isProfiling()) {
             Date finishTime = now.get();
+            long time = System.currentTimeMillis();
             Data context = new Data()
                 .setProjects(sortedProjects())
                 .setDate(finishTime)
                 .setName(statistics.topProject().getName())
                 .setGoals(Joiner.on(' ').join(statistics.goals()))
-                .setParameters(statistics.properties());
+                .setParameters(statistics.properties())
+                .setMachineName(machineName())
+                .setDeveloperName(developerName())
+                .setIpAddress(ipAddress())
+                .setOperatingSystem()
+                .setBuildSucceeded(statistics.getSucceeded())
+                .setKey(time);
             setDownloads(context);
 
             if (statistics.getStartTime() != null) {
                 context.setBuildTime(aStopWatchWithElapsedTime(MILLISECONDS.toNanos(finishTime.getTime() - statistics.getStartTime().getTime())));
             }
+
 
             configuration.reporter().write(context, new ReportDirectory(statistics.topProject()));
         }
@@ -123,6 +180,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             statistics.setTopProject(event.getSession().getTopLevelProject());
         }
     }
+
 
     private List<Project> sortedProjects() {
         Sorter sorter = configuration.sorter();
@@ -152,7 +210,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     }
 
     private void storeDownloadingArtifacts(RepositoryEvent event) {
-        logger.debug(String.format("Received event (%s): %s", event.getClass(), event));
+        logger.debug(String.format("Received event 1 (%s): %s. Type: %s", event.getClass(), event, event.getType().toString()));
         if (event.getType() == ARTIFACT_DOWNLOADING) {
             statistics.startDownload(event.getArtifact());
 
@@ -169,7 +227,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     }
 
     private void storeExecutionEvent(ExecutionEvent event) {
-        logger.debug(String.format("Received event (%s): %s", event.getClass(), event));
+        logger.debug(String.format("Received event 2 (%s): %s. Type: %s", event.getClass(), event, event.getType().toString()));
 
         MavenProject currentProject = event.getSession().getCurrentProject();
         switch (event.getType()) {
@@ -177,15 +235,21 @@ public class ProfilerEventSpy extends AbstractEventSpy {
                 statistics.startProject(currentProject);
                 break;
             case ProjectSucceeded:
+                statistics.stopProject(currentProject, event.getType());
+                break;
             case ProjectFailed:
-                statistics.stopProject(currentProject);
+                statistics.stopProject(currentProject, event.getType());
                 break;
             case MojoStarted:
                 statistics.startExecution(currentProject, event.getMojoExecution());
                 break;
             case MojoSucceeded:
+                statistics.stopExecution(currentProject, event.getMojoExecution());
+                break;
             case MojoFailed:
                 statistics.stopExecution(currentProject, event.getMojoExecution());
+                break;
+            default:
                 break;
         }
     }

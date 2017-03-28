@@ -3,6 +3,7 @@ package fr.jcgay.maven.profiler;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
+import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.artifact.Artifact;
@@ -13,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
@@ -30,6 +32,7 @@ public class Statistics {
     private Set<String> goals = emptySet();
     private Properties properties = new Properties();
     private Date startTime;
+    private boolean succeeded = true;
 
     public Statistics setTopProject(MavenProject topProject) {
         this.topProject = topProject;
@@ -119,10 +122,24 @@ public class Statistics {
         return this;
     }
 
-    public Statistics stopProject(MavenProject project) {
+    public Statistics stopProject(MavenProject project, ExecutionEvent.Type type) {
         LOGGER.debug("Stopping timer for project: {}", project);
+
+        if(type == ExecutionEvent.Type.ProjectFailed) {
+            succeeded = false;
+        }
+
         projects.get(project).stop();
         return this;
+    }
+
+    public Statistics setSucceeded(boolean succeeded) {
+        this.succeeded = succeeded;
+        return this;
+    }
+
+    public boolean getSucceeded() {
+        return this.succeeded;
     }
 
     public void setStartTime(Date startTime) {

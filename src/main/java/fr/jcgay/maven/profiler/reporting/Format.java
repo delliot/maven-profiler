@@ -11,6 +11,6 @@ public class Format {
         if (time == null) {
             return null;
         }
-        return String.valueOf(time.elapsedMillis()) + " ms";
+        return String.valueOf(time.elapsedMillis());
     }
 }
