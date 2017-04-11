@@ -2,27 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>fr.jcgay.maven</groupId>
-        <artifactId>jcgay-build-configuration</artifactId>
-        <version>1.10</version>
-    </parent>
 
-    <groupId>fr.jcgay.maven</groupId>
+    <groupId>com.central1.buildtools</groupId>
     <artifactId>maven-profiler</artifactId>
-    <version>2.6-SNAPSHOT</version>
-    <description>Log Maven mojos execution time</description>
+    <version>1.0</version>
+    <description>Log Maven module execution time</description>
 
     <prerequisites>
         <maven>3.0</maven>
     </prerequisites>
-
-    <scm>
-        <url>https://github.com/delliot/maven-profiler.git</url>
-        <connection>scm:git:git://github.com/delliot/maven-profiler.git</connection>
-        <developerConnection>scm:git:git@github.com:delliot/maven-profiler.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,11 +29,6 @@
             <version>11.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.github.jknack</groupId>
-            <artifactId>handlebars</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.eclipsesource.minimal-json</groupId>
             <artifactId>minimal-json</artifactId>
             <version>0.9.4</version>
@@ -57,50 +40,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.6.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>1.7.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.22</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy</artifactId>
-            <version>2.4.8</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.8.7</version>
         </dependency>
     </dependencies>
 
@@ -148,37 +95,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--<plugin>-->
-                <!--&lt;!&ndash;<artifactId>maven-invoker-plugin</artifactId>&ndash;&gt;-->
-                <!--&lt;!&ndash;<version>2.0.0</version>&ndash;&gt;-->
-                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<projectsDirectory>src/it</projectsDirectory>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<cloneClean>true</cloneClean>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<showVersion>true</showVersion>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<postBuildHookScript>verify.groovy</postBuildHookScript>&ndash;&gt;-->
-                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-                <!--&lt;!&ndash;<executions>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<id>integration-test</id>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<goals>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<goal>install</goal>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<goal>run</goal>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</goals>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
-                <!--&lt;!&ndash;</executions>&ndash;&gt;-->
-            <!--</plugin>-->
         </plugins>
     </build>
 
