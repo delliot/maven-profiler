@@ -19,6 +19,7 @@ public class Configuration {
 
     private static final String PROFILE = "profile";
     private static final String PROFILE_FORMAT = "profileFormat";
+    private static final String POST = "postUrl";
 
     /**
      *
@@ -34,6 +35,7 @@ public class Configuration {
     private boolean isProfiling;
     private final Reporter reporter;
     private final Sorter sorter;
+    private String postUrl;
 
     /**
      *
@@ -41,10 +43,11 @@ public class Configuration {
      * @param reporter
      * @param sorter
      */
-    public Configuration(boolean isProfiling, Reporter reporter, Sorter sorter) {
+    public Configuration(boolean isProfiling, Reporter reporter, Sorter sorter, String postUrl) {
         this.isProfiling = true;
         this.reporter = reporter;
         this.sorter = sorter;
+        this.postUrl = postUrl;
     }
 
     /**
@@ -52,7 +55,7 @@ public class Configuration {
      * @return
      */
     public static Configuration read() {
-        return new Configuration(isActive(), chooseReporter(), chooseSorter());
+        return new Configuration(isActive(), chooseReporter(), chooseSorter(), chooseUrl());
     }
 
     /**
@@ -85,6 +88,10 @@ public class Configuration {
      */
     private static Sorter chooseSorter() {
         return new ByExecutionOrder();
+    }
+
+    private static String chooseUrl() {
+        return System.getProperty(POST, "http://httpbin.org/post");
     }
 
     /**
