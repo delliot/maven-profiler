@@ -80,26 +80,10 @@ public class ProfilerEventSpy extends AbstractEventSpy {
 
     /**
      *
-     * @param str
-     * @return
      */
-    Boolean isOfflineSet(String str) {
-        boolean result;
-
-        result = str.contains(" -o") || str.contains(" --offline");
-        return result;
-    }
-
     @Override
-    /**
-     *
-     */
     public void init(Context context) throws Exception {
         super.init(context);
-
-        Map<String, Object> data = context.getData();
-        Properties sysProps = (Properties) data.get("systemProperties");
-        String offline = sysProps.getProperty("env.MAVEN_CMD_LINE_ARGS");
 
         if (configuration.isProfiling()) {
             logger.info("Profiling mvn execution...");
@@ -121,10 +105,10 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             if (event instanceof DefaultMavenExecutionRequest) {
                 DefaultMavenExecutionRequest mavenEvent = (DefaultMavenExecutionRequest) event;
 
-                DefaultMavenExecutionRequest mEvent = (DefaultMavenExecutionRequest) event;
                 if(mavenEvent.isOffline()) {
                     configuration.setProfiling(false);
                 }
+
                 statistics.setGoals(new LinkedHashSet<String>(mavenEvent.getGoals()));
                 statistics.setProperties(mavenEvent.getUserProperties());
             } else if (event instanceof ExecutionEvent) {
@@ -223,7 +207,6 @@ public class ProfilerEventSpy extends AbstractEventSpy {
                 .setOperatingSystem()
                 .setBuildSucceeded(statistics.getSucceeded())
                 .setKey(time);
-            setDownloads(context);
 
             if (statistics.getStartTime() != null) {
                 context.setBuildTime(aStopWatchWithElapsedTime(MILLISECONDS.toNanos(finishTime.getTime() - statistics.getStartTime().getTime())));
@@ -255,16 +238,9 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         Map<MavenProject, Stopwatch> allProjectsWithTimer = statistics.projects();
         for (MavenProject project : sorter.projects(allProjectsWithTimer)) {
             Project currentProject = new Project(project.getName(), allProjectsWithTimer.get(project));
-//            for (Entry<MojoExecution, Stopwatch> mojo : sorter.mojoExecutionsOf(project, statistics.executions())) {
-//                currentProject.addMojoTime(new EntryAndTime<MojoExecution>(mojo.getKey(), mojo.getValue()));
-//            }
             result.add(currentProject);
         }
         return result;
-    }
-
-    private void setDownloads(Data data) {
-
     }
 
 
