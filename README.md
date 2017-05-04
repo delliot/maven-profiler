@@ -41,8 +41,6 @@ This also works when `mvn` is executed on multiple threads (option `-T`).
 
 ### JSON
 
-	mvn install -Dprofile -DprofileFormat=JSON
-
 ```
 {
   "name": "maven-profiler",
@@ -59,10 +57,5 @@ This also works when `mvn` is executed on multiple threads (option `-T`).
 }
 ```
 
-## Build status
 
 
-
-## Release
-
-    mvn -B release:prepare release:perform
