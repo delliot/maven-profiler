@@ -25,9 +25,9 @@ Use the new [core extensions configuration mechanism](http://takari.io/2015/03/1
 	<?xml version="1.0" encoding="UTF-8"?>
 	<extensions>
 	    <extension>
-	      <groupId>fr.jcgay.maven</groupId>
+	      <groupId>com.central1</groupId>
 	      <artifactId>maven-profiler</artifactId>
-	      <version>2.5</version>
+	      <version>1.0</version>
 	    </extension>
 	</extensions>
 
@@ -40,8 +40,6 @@ This also works when `mvn` is executed on multiple threads (option `-T`).
 
 
 ### JSON
-
-	mvn install -Dprofile -DprofileFormat=JSON
 
 ```
 {
@@ -59,10 +57,5 @@ This also works when `mvn` is executed on multiple threads (option `-T`).
 }
 ```
 
-## Build status
 
 
-
-## Release
-
-    mvn -B release:prepare release:perform
