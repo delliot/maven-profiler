@@ -19,6 +19,13 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Full credit to jcgay on github for the original maven-profiler
+ *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
+ */
 public class Statistics {
 
     private static final Logger LOGGER = getLogger(Statistics.class);

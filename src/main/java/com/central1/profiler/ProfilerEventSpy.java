@@ -35,7 +35,11 @@ import static org.apache.maven.execution.ExecutionEvent.Type.ProjectDiscoverySta
 import static org.apache.maven.execution.ExecutionEvent.Type.SessionStarted;
 
 /**
+ * Full credit to jcgay on github for the original maven-profiler
  *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
  */
 @Component(role = EventSpy.class, hint = "profiler", description = "Measure times taken by Maven.")
 public class ProfilerEventSpy extends AbstractEventSpy {

@@ -15,39 +15,33 @@ import static com.google.common.base.Functions.forMap;
 import static com.google.common.collect.Collections2.transform;
 import static java.util.Arrays.asList;
 
+
+/**
+ * Full credit to jcgay on github for the original maven-profiler
+ *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
+ */
 public class Configuration {
 
     private static final String PROFILE = "profile";
-    private static final String PROFILE_FORMAT = "profileFormat";
     private static final String POST = "postUrl";
-
-    /**
-     *
-     */
-    private static final Function<String,Reporter> reporters =  compose(forMap(ImmutableMap.<String,Reporter>builder()
-    		.put("json", new JsonReporter())
-    		.build()), new Function<String,String>(){
-				@Override
-				public String apply(String it) {
-					return it.toLowerCase();
-				}});
 
     private boolean isProfiling;
     private final Reporter reporter;
     private final Sorter sorter;
-    private String postUrl;
+
 
     /**
      *
      * @param isProfiling
-     * @param reporter
      * @param sorter
      */
-    public Configuration(boolean isProfiling, Reporter reporter, Sorter sorter, String postUrl) {
+    public Configuration(boolean isProfiling, Sorter sorter, String postUrl) {
         this.isProfiling = true;
-        this.reporter = reporter;
+        this.reporter = chooseReporter(postUrl);
         this.sorter = sorter;
-        this.postUrl = postUrl;
     }
 
     /**
@@ -55,7 +49,7 @@ public class Configuration {
      * @return
      */
     public static Configuration read() {
-        return new Configuration(isActive(), chooseReporter(), chooseSorter(), chooseUrl());
+        return new Configuration(isActive(),  chooseSorter(), chooseUrl());
     }
 
     /**
@@ -98,9 +92,8 @@ public class Configuration {
      *
      * @return
      */
-    private static Reporter chooseReporter() {
-        List<String> formats = asList(System.getProperty(PROFILE_FORMAT, "json").split(","));
-        return new CompositeReporter(transform(formats, reporters));
+    private static Reporter chooseReporter(String url) {
+        return new JsonReporter(url);
     }
 
     /**

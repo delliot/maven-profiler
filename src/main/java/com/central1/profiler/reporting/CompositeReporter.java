@@ -4,6 +4,13 @@ import com.central1.profiler.reporting.template.Data;
 
 import java.util.Collection;
 
+/**
+ * Full credit to jcgay on github for the original maven-profiler
+ *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
+ */
 public final class CompositeReporter implements Reporter {
 
     private final Collection<? extends Reporter> delegates;

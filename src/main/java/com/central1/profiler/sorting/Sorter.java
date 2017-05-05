@@ -9,6 +9,13 @@ import org.eclipse.aether.artifact.Artifact;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Full credit to jcgay on github for the original maven-profiler
+ *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
+ */
 public interface Sorter {
 
     List<MavenProject> projects(Map<MavenProject, Stopwatch> projects);

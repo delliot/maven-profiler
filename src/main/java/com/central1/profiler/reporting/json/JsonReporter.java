@@ -22,10 +22,25 @@ import java.util.zip.GZIPOutputStream;
 import static com.central1.profiler.reporting.Format.ms;
 import static org.slf4j.LoggerFactory.getLogger;
 
+
+/**
+ * Full credit to jcgay on github for the original maven-profiler
+ *
+ * Licensed under MIT
+ *
+ * Modifications by Delan Elliot (delliot@central1.com)
+ */
 public class JsonReporter implements Reporter {
 
     private static final Logger LOGGER = getLogger(JsonReporter.class);
     private  JsonObject obj = new JsonObject();
+    private String postUrl;
+
+
+    public JsonReporter(String url) {
+        this.postUrl = url;
+    }
+
 
     @Override
     public void write(Data data) {
@@ -48,7 +63,7 @@ public class JsonReporter implements Reporter {
             RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(1000).build();
 
             HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-            HttpPost post = new HttpPost("https://vacslp01dev.oss.central1.com/mdi-dev/profile-database.php");
+            HttpPost post = new HttpPost(postUrl);
 
             post.addHeader("Content-Encoding", "gzip");
             post.addHeader("Content-Type", "application/json");

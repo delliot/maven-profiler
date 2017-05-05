@@ -10,4 +10,5 @@
         <artifactId>takari-concurrent-localrepo</artifactId>
         <version>0.0.7</version>
     </extension>
+
 </extensions>
