@@ -5,7 +5,7 @@
 
     <groupId>com.central1.buildtools</groupId>
     <artifactId>maven-profiler</artifactId>
-    <version>0.0.0.0.0-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>maven-profiler</name>
@@ -49,6 +49,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -78,6 +80,37 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.13</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>4.6.0.201612231935-r</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,7 +138,14 @@
                         <relocation>
                             <pattern>com.google.common</pattern>
                             <shadedPattern>com.shaded.google.common</shadedPattern>
+
                         </relocation>
+                        <!--<relocation>-->
+                            <!--<pattern>org.slf4j</pattern>-->
+                            <!--<shadedPattern>-->
+                                <!--org.shaded.slf4j-->
+                            <!--</shadedPattern>-->
+                        <!--</relocation>-->
                     </relocations>
                     <artifactSet>
                         <excludes>

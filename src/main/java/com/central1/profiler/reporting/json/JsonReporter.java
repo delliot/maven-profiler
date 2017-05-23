@@ -42,6 +42,7 @@ public class JsonReporter implements Reporter {
     }
 
 
+
     @Override
     public void write(Data data) {
         String reportString = getJSONRepresentation(data);
@@ -49,12 +50,12 @@ public class JsonReporter implements Reporter {
 
         try {
             GZIPOutputStream gzos = new GZIPOutputStream(baos);
+            gzos.write( reportString.getBytes("UTF-8") );
 
-            gzos.write(reportString.getBytes("UTF-8"));
             gzos.flush();
             gzos.close();
         } catch (IOException e) {
-            LOGGER.debug("GZIP error: " + e.getMessage());
+            LOGGER.debug( "GZIP error: " + e.getMessage() );
         }
 
         byte [] zipBytes = baos.toByteArray();
@@ -63,7 +64,7 @@ public class JsonReporter implements Reporter {
             RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(1000).build();
 
             HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-            HttpPost post = new HttpPost(postUrl);
+            HttpPost post = new HttpPost( postUrl );
 
             post.addHeader("Content-Encoding", "gzip");
             post.addHeader("Content-Type", "application/json");
@@ -74,6 +75,7 @@ public class JsonReporter implements Reporter {
 
             LOGGER.debug("************ POST REQUEST ************");
             LOGGER.debug("Response Status: " + response.getStatusLine());
+            LOGGER.info(reportString);
         } catch (IOException e) {
             LOGGER.error("Request error: " + e.getMessage());
         }
@@ -83,23 +85,42 @@ public class JsonReporter implements Reporter {
 
 
     private String getJSONRepresentation(Data context) {
-        obj.add("key", context.getKey());
-        obj.add("project_name", context.getName());
-        obj.add("time", ms(context.getBuildTime()));
-        obj.add("machine_name", context.getMachineName());
-        obj.add("developer_name", context.getDeveloperName());
-        obj.add("goals", context.getGoals());
-        obj.add("date", context.getFormattedDate());
-        obj.add("parameters", context.getParameters().toString());
-        obj.add("operatingSystem", context.getOperatingSystem());
-        obj.add("ipAddress",context.getIpAddress());
-        obj.add("succeeded", ((Boolean) context.getBuildSucceeded()).toString());
+        obj.add("key", context.getKey() );
+        obj.add("version", context.getVersion() );
+        obj.add("project_name", context.getName() );
+        obj.add("top_group_id", context.getTopGroupId() );
+        obj.add("top_artifact_id", context.getTopArtifactId() );
+        obj.add("cpu_model", context.getCpuModel() );
+        obj.add("cpu_freq", context.getCpuFreq() );
+        obj.add("memory", context.getRamAmt() );
+        obj.add("time", ms( context.getBuildTime() ) );
+        obj.add("machine_name", context.getMachineName() );
+        obj.add("developer_name", context.getDeveloperName() );
+        obj.add("goals", context.getGoals()) ;
+        obj.add("date", context.getFormattedDate() );
+        obj.add("commit", context.getCommit() );
+
+        JsonArray paramArr = new JsonArray();
+
+        for (String param : context.getParameters().toString().split(" ")) {
+            if ( param.contains(postUrl) ) {
+                continue;
+            }
+            paramArr.add(param);
+        }
+        obj.add("parameters", paramArr);
+
+        obj.add("operatingSystem", context.getOperatingSystem() );
+        obj.add("ipAddress",context.getIpAddress() );
+        obj.add("succeeded", ( (Boolean) context.getBuildSucceeded() ).toString() );
 
         JsonArray projectsArr = new JsonArray();
         for (Project project : context.getProjects()) {
             JsonObject projectObj = new JsonObject();
-            projectObj.add("project", project.getName());
-            projectObj.add("time", ms(project.getTime()));
+            projectObj.add("name", project.getName() );
+            projectObj.add("time", ms( project.getTime() ) );
+            projectObj.add("groupId", project.getGroupId() );
+            projectObj.add("artifactId", project.getArtifactId() );
 
             projectsArr.add(projectObj);
         }

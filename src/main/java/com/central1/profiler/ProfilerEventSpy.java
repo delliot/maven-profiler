@@ -5,19 +5,20 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Supplier;
 import com.central1.profiler.reporting.template.Data;
-import com.central1.profiler.reporting.template.EntryAndTime;
 import com.central1.profiler.reporting.template.Project;
 import com.central1.profiler.sorting.Sorter;
 import org.apache.maven.eventspy.AbstractEventSpy;
 import org.apache.maven.eventspy.EventSpy;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.ExecutionEvent;
-import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
+//import org.eclipse.jgit.lib.Ref;
+//import org.eclipse.jgit.lib.Repository;
+//import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.Map.Entry;
+//import java.util.Map.Entry;
 
 import static com.central1.profiler.KnownElapsedTimeTicker.aStopWatchWithElapsedTime;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -48,6 +49,8 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     private final Configuration configuration;
     private final Supplier<Date> now;
 
+    private static final String VERSION = "1.1";
+
     @Requirement
     private Logger logger;
 
@@ -60,6 +63,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         this.statistics = new Statistics();
         this.configuration = Configuration.read();
         this.now = new Supplier<Date>() {
+
             @Override
             public Date get() {
                 return new Date();
@@ -89,7 +93,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     public void init(Context context) throws Exception {
         super.init(context);
 
-        if (configuration.isProfiling()) {
+        if (true) {
             logger.info("Profiling mvn execution...");
         }
 
@@ -103,16 +107,12 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     @Override
     public void onEvent(Object event) throws Exception {
         super.onEvent(event);
-
-
         if (configuration.isProfiling()) {
             if (event instanceof DefaultMavenExecutionRequest) {
                 DefaultMavenExecutionRequest mavenEvent = (DefaultMavenExecutionRequest) event;
-
                 if(mavenEvent.isOffline()) {
                     configuration.setProfiling(false);
                 }
-
                 statistics.setGoals(new LinkedHashSet<String>(mavenEvent.getGoals()));
                 statistics.setProperties(mavenEvent.getUserProperties());
             } else if (event instanceof ExecutionEvent) {
@@ -142,7 +142,6 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             InetAddress addr;
             addr = InetAddress.getLocalHost();
             String hostname = addr.getHostName();
-
             return hostname;
         } catch (UnknownHostException e) {
             logger.error("could not get machine name", e);
@@ -196,21 +195,32 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     @Override
     public void close() throws Exception {
         super.close();
+        HardwareInvestigator hi = new HardwareInvestigator();
+        hi.buildSysInfo();
+        Map<String, String> sysInfo = hi.getSysInfo();
+
         if (configuration.isProfiling()) {
             Date finishTime = now.get();
             long time = System.currentTimeMillis();
             Data context = new Data()
-                .setProjects(sortedProjects())
-                .setDate(finishTime)
-                .setName(statistics.topProject().getName())
-                .setGoals(Joiner.on(' ').join(statistics.goals()))
-                .setParameters(statistics.properties())
-                .setMachineName(machineName())
-                .setDeveloperName(developerName())
-                .setIpAddress(ipAddress())
+                .setProjects( sortedProjects() )
+                .setDate( finishTime )
+                .setName( statistics.topProject().getName() )
+                .setTopArtifactId( statistics.topProject().getArtifactId() )
+                .setTopGroupId( statistics.topProject().getGroupId() )
+                .setCpuModel( sysInfo.get( "cpu_model" ) )
+                .setCpuFreq( sysInfo.get( "cpu_freq" ) )
+                .setRamAmt( sysInfo.get( "memory" ) )
+                .setGoals( Joiner.on(' ').join( statistics.goals() ) )
+                .setParameters( statistics.properties() )
+                .setMachineName( machineName() )
+                .setDeveloperName( developerName() )
+                .setIpAddress( ipAddress() )
                 .setOperatingSystem()
-                .setBuildSucceeded(statistics.getSucceeded())
-                .setKey(time);
+                .setBuildSucceeded( statistics.getSucceeded() )
+                .setKey( time )
+                .setCommit( getCommitId() ) //add method
+                .setVersion( VERSION );
 
             if (statistics.getStartTime() != null) {
                 context.setBuildTime(aStopWatchWithElapsedTime(MILLISECONDS.toNanos(finishTime.getTime() - statistics.getStartTime().getTime())));
@@ -241,7 +251,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         List<Project> result = new ArrayList<Project>();
         Map<MavenProject, Stopwatch> allProjectsWithTimer = statistics.projects();
         for (MavenProject project : sorter.projects(allProjectsWithTimer)) {
-            Project currentProject = new Project(project.getName(), allProjectsWithTimer.get(project));
+            Project currentProject = new Project(project.getGroupId(), project.getArtifactId(), project.getName(), allProjectsWithTimer.get(project));
             result.add(currentProject);
         }
         return result;
@@ -274,5 +284,30 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             default:
                 break;
         }
+    }
+
+    private String getCommitId() {
+//        FileRepositoryBuilder  build = new FileRepositoryBuilder();
+//
+//        Repository repo = null;
+//        Ref head = null;
+//
+//        try {
+//            repo = build.setGitDir(statistics.topProject().getBasedir())
+//                .readEnvironment()
+//                .findGitDir()
+//                .build();
+//
+//            head = repo.findRef("HEAD");
+//
+//        } catch (IOException e) {
+//            logger.error(e.getMessage());
+//            logger.error(e.getStackTrace().toString());
+//        }
+//
+//        if (head != null) {
+//            return head.getObjectId().getName();
+//        }
+        return "commit COMMIT";
     }
 }

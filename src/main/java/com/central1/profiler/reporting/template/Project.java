@@ -12,26 +12,30 @@ public class Project {
 
     private final String name;
     private final Stopwatch time;
+    private final String groupId;
+    private final String artifactId;
     private final List<EntryAndTime<MojoExecution>> mojosWithTime = new ArrayList<EntryAndTime<MojoExecution>>();
 
-    public Project(String name, Stopwatch time) {
+    public Project(String groupId, String artifactId, String name, Stopwatch time) {
         this.name = name;
         this.time = time;
+        this.groupId = groupId;
+        this.artifactId = artifactId;
     }
 
-//    public void addMojoTime(EntryAndTime<MojoExecution> mojoWithTime) {
-//        mojosWithTime.add(mojoWithTime);
-//    }
 
     public String getName() {
         return name;
     }
 
-    /*
-    public List<EntryAndTime<MojoExecution>> getMojosWithTime() {
-        return mojosWithTime;
+
+    public String getGroupId() {
+        return groupId;
     }
-    */
+
+    public String getArtifactId() {
+        return artifactId;
+    }
 
     public Stopwatch getTime() {
         return time;

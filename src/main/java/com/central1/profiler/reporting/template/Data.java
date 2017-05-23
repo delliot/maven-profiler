@@ -24,18 +24,19 @@ public class Data {
     private String machineName;
     private String developerName;
     private String operatingSystem;
+    private String cpuModel;
+    private String cpuFreq;
+    private String ramAmt;
     private String ipAddress;
+    private String version;
+    private String topGroupId;
+    private String topArtifactId;
+    private String commit;
     private long key;
     private boolean buildSucceeded;
 
     public List<Project> getProjects() {
         return firstNonNull(projects, Collections.<Project>emptyList());
-    }
-
-
-    public Data setKey(long timeSinceEpoch) {
-        this.key = (timeSinceEpoch * 1000) + (this.machineName.hashCode() % 1000);
-        return this;
     }
 
     public Stopwatch getBuildTime() {
@@ -85,6 +86,71 @@ public class Data {
         return operatingSystem;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public String getTopGroupId() {
+        return topGroupId;
+    }
+
+    public String getTopArtifactId() {
+        return topArtifactId;
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+
+    public String getCpuModel() {
+        return cpuModel;
+    }
+
+    public String getCpuFreq() {
+        return cpuFreq;
+    }
+
+
+    public String getRamAmt() {
+        return ramAmt;
+    }
+
+    public Data setRamAmt(String ramAmt) {
+        this.ramAmt = ramAmt;
+        return this;
+    }
+
+    public Data setTopArtifactId(String topArtifactId) {
+        this.topArtifactId = topArtifactId;
+        return this;
+    }
+
+    public Data setTopGroupId(String topGroupId) {
+        this.topGroupId = topGroupId;
+        return this;
+    }
+
+    public Data setCpuModel(String cpuModel) {
+        this.cpuModel = cpuModel;
+        return this;
+    }
+
+    public Data setCpuFreq(String cpuFreq) {
+        this.cpuFreq = cpuFreq;
+        return this;
+    }
+
+    public Data setVersion(String version) {
+        this.version = version;
+        return this;
+    }
+
+    public Data setCommit(String commit) {
+        this.commit = commit;
+        return this;
+    }
+
     public Data setProjects(List<Project> projects) {
         this.projects = projects;
         return this;
@@ -101,6 +167,11 @@ public class Data {
     }
     public Data setDeveloperName(String developerName) {
         this.developerName = developerName;
+        return this;
+    }
+
+    public Data setKey(long timeSinceEpoch) {
+        this.key = (timeSinceEpoch * 1000) + (this.machineName.hashCode() % 1000);
         return this;
     }
 
