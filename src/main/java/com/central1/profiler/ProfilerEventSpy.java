@@ -49,7 +49,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     private final Configuration configuration;
     private final Supplier<Date> now;
 
-    private static final String VERSION = "1.1";
+    private static final String VERSION = "1.0.1";
 
     @Requirement
     private Logger logger;
@@ -63,7 +63,6 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         this.statistics = new Statistics();
         this.configuration = Configuration.read();
         this.now = new Supplier<Date>() {
-
             @Override
             public Date get() {
                 return new Date();
