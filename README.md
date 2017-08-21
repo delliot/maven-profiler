@@ -4,21 +4,8 @@ A time execution recorder for Maven which log time taken by each mojo in your bu
 
 ##Installation
 
-`$M2_HOME` refers to maven installation folder.
-
-```
-.
-├── bin
-├── boot
-├── conf
-└── lib
-```
-
 
 ### Maven >= 3.3.x
-
-Place maven-profiler.jar in $M2_HOME/lib/ext
-*or*
 
 Use the new [core extensions configuration mechanism](http://takari.io/2015/03/19/core-extensions.html) by creating a `${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` file with:
 
