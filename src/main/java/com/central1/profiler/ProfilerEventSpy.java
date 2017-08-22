@@ -168,7 +168,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         try {
             whatismyip = new URL("http://checkip.amazonaws.com");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
 
         BufferedReader in = null;
@@ -177,14 +177,14 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             in = new BufferedReader(new InputStreamReader(
                 whatismyip.openStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
 
         String ip = null;
         try {
             ip = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
         return ip;
     }
