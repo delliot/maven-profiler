@@ -6,7 +6,7 @@ import com.google.common.base.Ticker;
 /**
  * Full credit to jcgay on github for the original maven-profiler
  *
- * Licensed under MIT
+ *
  *
  * Modifications by Delan Elliot (delliot@central1.com)
  */

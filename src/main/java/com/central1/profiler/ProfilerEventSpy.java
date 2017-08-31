@@ -1,5 +1,6 @@
 package com.central1.profiler;
 
+import com.central1.profiler.parser.GitCommitParser;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
@@ -16,9 +17,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-//import org.eclipse.jgit.lib.Ref;
-//import org.eclipse.jgit.lib.Repository;
-//import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,7 +37,7 @@ import static org.apache.maven.execution.ExecutionEvent.Type.SessionStarted;
 /**
  * Full credit to jcgay on github for the original maven-profiler
  *
- * Licensed under MIT
+ *
  *
  * Modifications by Delan Elliot (delliot@central1.com)
  */
@@ -49,7 +48,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     private final Configuration configuration;
     private final Supplier<Date> now;
 
-    private static final String VERSION = "1.0.1";
+    private static final String VERSION = "1.0.1-SNAPSHOT";
 
     @Requirement
     private Logger logger;
@@ -166,7 +165,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
         try {
             whatismyip = new URL("http://checkip.amazonaws.com");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
 
         BufferedReader in = null;
@@ -175,14 +174,14 @@ public class ProfilerEventSpy extends AbstractEventSpy {
             in = new BufferedReader(new InputStreamReader(
                 whatismyip.openStream()));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
 
         String ip = null;
         try {
             ip = in.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
         }
         return ip;
     }
@@ -218,7 +217,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
                 .setOperatingSystem()
                 .setBuildSucceeded( statistics.getSucceeded() )
                 .setKey( time )
-                .setCommit( getCommitId() ) //add method
+                .setCommit( getCommitId() )
                 .setVersion( VERSION );
 
             if (statistics.getStartTime() != null) {
@@ -286,27 +285,21 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     }
 
     private String getCommitId() {
-//        FileRepositoryBuilder  build = new FileRepositoryBuilder();
-//
-//        Repository repo = null;
-//        Ref head = null;
-//
-//        try {
-//            repo = build.setGitDir(statistics.topProject().getBasedir())
-//                .readEnvironment()
-//                .findGitDir()
-//                .build();
-//
-//            head = repo.findRef("HEAD");
-//
-//        } catch (IOException e) {
-//            logger.error(e.getMessage());
-//            logger.error(e.getStackTrace().toString());
-//        }
-//
-//        if (head != null) {
-//            return head.getObjectId().getName();
-//        }
-        return "commit COMMIT";
+        try {
+            GitCommitParser gitCommitParser = new GitCommitParser();
+
+            String s = gitCommitParser.getHeadId();
+
+            if (s != null )
+            {
+                return s;
+            }
+
+        } catch (IOException ioe) {
+            logger.debug("Git dir cannot be found!");
+            logger.debug(ioe.getMessage());
+        }
+
+        return "";
     }
 }

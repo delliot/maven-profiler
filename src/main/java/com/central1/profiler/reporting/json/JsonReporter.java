@@ -26,7 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Full credit to jcgay on github for the original maven-profiler
  *
- * Licensed under MIT
+ *
  *
  * Modifications by Delan Elliot (delliot@central1.com)
  */
@@ -75,7 +75,7 @@ public class JsonReporter implements Reporter {
 
             LOGGER.debug("************ POST REQUEST ************");
             LOGGER.debug("Response Status: " + response.getStatusLine());
-            LOGGER.info(reportString);
+            LOGGER.debug(reportString);
         } catch (IOException e) {
             LOGGER.error("Request error: " + e.getMessage());
         }

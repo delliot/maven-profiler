@@ -102,7 +102,6 @@ public class Data {
         return commit;
     }
 
-
     public String getCpuModel() {
         return cpuModel;
     }
@@ -110,7 +109,6 @@ public class Data {
     public String getCpuFreq() {
         return cpuFreq;
     }
-
 
     public String getRamAmt() {
         return ramAmt;
@@ -165,6 +163,7 @@ public class Data {
         this.buildSucceeded = success;
         return this;
     }
+
     public Data setDeveloperName(String developerName) {
         this.developerName = developerName;
         return this;

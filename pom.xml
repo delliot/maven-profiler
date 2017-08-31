@@ -6,7 +6,7 @@
 
     <groupId>com.central1.buildtools</groupId>
     <artifactId>maven-profiler</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>maven-profiler</name>
@@ -56,44 +56,12 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.6.0.201612231935-r</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.jcraft</groupId>
-                    <artifactId>jsch</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.googlecode.javaewah</groupId>
-                    <artifactId>JavaEWAH</artifactId>
-                </exclusion>
-                <!--<exclusion>-->
-                <!--<groupId>log4j</groupId>-->
-                <!--<artifactId>log4j</artifactId>-->
-                <!--</exclusion>-->
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.3.9</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -125,14 +93,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-version}</version>
+            <version>1.7.5</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.5</version>
+            <version>${slf4j-version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -158,52 +126,17 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <minimizeJar>true</minimizeJar>
-                    <!--<filters>-->
-                        <!--<filter>-->
-                            <!--<artifact>org.eclipse.jgit:org.eclipse.jgit</artifact>-->
-                            <!--<includes>-->
-                                <!--<include>**</include>-->
-                            <!--</includes>-->
-                        <!--</filter>-->
-                    <!--</filters>-->
                     <relocations>
-                        <!--<relocation>-->
-                            <!--<pattern>com.googlecode.javaewah</pattern>-->
-                            <!--<shadedPattern>com.central1.shaded.javaewah</shadedPattern>-->
-                        <!--</relocation>-->
                         <relocation>
-                            <pattern>org.slf4j</pattern>
-                            <shadedPattern>com.central1.slf4j</shadedPattern>
+                            <pattern>com.google.common</pattern>
+                            <shadedPattern>com.shaded.google.common</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>org.eclipse.jgit</pattern>
-                            <shadedPattern>com.central1.jgit</shadedPattern>
-                        </relocation>
-                        <!--<relocation>-->
-                            <!--<pattern>org.apache.commons.logging</pattern>-->
-                            <!--<shadedPattern>com.central1.commons.logging</shadedPattern>-->
-                        <!--</relocation>-->
-                        <!--<relocation>-->
-                            <!--<pattern>org.apache.commons</pattern>-->
-                            <!--<shadedPattern>com.central1.apache.commons</shadedPattern>-->
-                        <!--</relocation>-->
-                        <!--<relocation>-->
-                            <!--<pattern>org.apache.http</pattern>-->
-                            <!--<shadedPattern>com.central1.apache.http</shadedPattern>-->
-                        <!--</relocation>-->
-                        <!--<relocation>-->
-                            <!--<pattern>com.google.common</pattern>-->
-                            <!--<shadedPattern>com.central1.google.common</shadedPattern>-->
-                        <!--</relocation>-->
                     </relocations>
-                    <!--&lt;!&ndash;<artifactSet>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<excludes>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<exclude>org.apache.maven</exclude>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<exclude>org.sonatype.*</exclude>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<exclude>org.codehaus.plexus</exclude>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<exclude>org.slf4j:*</exclude>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</excludes>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</artifactSet>&ndash;&gt;-->
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.slf4j:*</exclude>
+                        </excludes>
+                    </artifactSet>
                 </configuration>
                 <executions>
                     <execution>
@@ -214,7 +147,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
