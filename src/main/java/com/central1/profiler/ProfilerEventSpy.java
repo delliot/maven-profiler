@@ -91,7 +91,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     public void init(Context context) throws Exception {
         super.init(context);
 
-        if (true) {
+        if ( configuration.isProfiling() ) {
             logger.info("Profiling mvn execution...");
         }
 
