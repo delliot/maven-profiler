@@ -48,7 +48,7 @@ public class ProfilerEventSpy extends AbstractEventSpy {
     private final Configuration configuration;
     private final Supplier<Date> now;
 
-    private static final String VERSION = "1.0.1-SNAPSHOT";
+    private static final String VERSION = "2";
 
     @Requirement
     private Logger logger;
